@@ -1,17 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/base/utils/app_routes.dart';
 import 'package:mynotes/firebase_options.dart';
+import 'package:mynotes/views/login_view.dart';
+import 'package:mynotes/views/register_view.dart';
 
-void main() {
+void main() {  
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     title: 'Flutter Demo',
     theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       useMaterial3: true,
     ),
     home: const HomePage(),
+    routes: {
+      AppRoutes.register: (context) => const RegisterView(),
+      AppRoutes.login: (context) => const LoginView(),
+    },
   ));
 }
 
@@ -34,13 +42,14 @@ class HomePage extends StatelessWidget {
           // checks the connection of the Firebase.initializeApp async func
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              final user = FirebaseAuth.instance.currentUser;
-              if (user?.emailVerified ?? false) {
-                print('You are a verified user');
-              } else {
-                print('Verify first');
-              }
-              return const Text('Done');
+              // final user = FirebaseAuth.instance.currentUser;
+              // if (user?.emailVerified ?? false) {
+              //   user?.reload();
+              //   return const Text('Done');
+              // } else {
+              //   return const VerifyEmailView();
+              // }
+              return const LoginView();
             default:
               return const Text('Loading...');
           }
@@ -49,3 +58,4 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+

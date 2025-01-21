@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import '../firebase_options.dart';
 
 class LoginView extends StatefulWidget {
@@ -34,9 +33,6 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
       body: FutureBuilder(
         // Firebase.initializeApp returns  a Future(promise) - initializes Firebase before any widget is rendered.
         future: Firebase.initializeApp(
@@ -69,15 +65,14 @@ class _LoginViewState extends State<LoginView> {
                         final email = _email.text;
                         final password = _password.text;
                         try {
-                          final userCredential = await FirebaseAuth.instance
+                          await FirebaseAuth.instance
                               .signInWithEmailAndPassword(
                                   email: email, password: password);
-                          print(userCredential);
+                          // print(userCredential);
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'invalid-credentials') {
                             print('Invalid Credentials');
                           }
-
                           // print(e);
                         } catch (e) {
                           print("SOMETHING BAD HAPPENED!");
@@ -85,9 +80,14 @@ class _LoginViewState extends State<LoginView> {
                         }
                       },
                       child: const Text('Login')),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, "/register", (route) => false);
+                      },
+                      child: const Text("Not registered yet? Register here!"))
                 ],
               );
-
             default:
               return const Text('Loading...');
           }
