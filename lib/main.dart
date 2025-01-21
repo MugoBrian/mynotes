@@ -5,8 +5,9 @@ import 'package:mynotes/base/utils/app_routes.dart';
 import 'package:mynotes/firebase_options.dart';
 import 'package:mynotes/views/login_view.dart';
 import 'package:mynotes/views/register_view.dart';
+import 'package:mynotes/views/verify_email_view.dart';
 
-void main() {  
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -42,20 +43,23 @@ class HomePage extends StatelessWidget {
           // checks the connection of the Firebase.initializeApp async func
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              // final user = FirebaseAuth.instance.currentUser;
-              // if (user?.emailVerified ?? false) {
-              //   user?.reload();
-              //   return const Text('Done');
-              // } else {
-              //   return const VerifyEmailView();
-              // }
-              return const LoginView();
+              final user = FirebaseAuth.instance.currentUser;
+              if (user != null) {
+                if (user.emailVerified) {
+                  print("Email verified");
+                } else {
+                  return const VerifyEmailView();
+                }
+              } else {
+                return const LoginView();
+              }
+              return const Text("Done");
+
             default:
-              return const Text('Loading...');
+              return const CircularProgressIndicator();
           }
         },
       ),
     );
   }
 }
-
