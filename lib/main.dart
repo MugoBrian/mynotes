@@ -20,6 +20,7 @@ void main() {
     routes: {
       AppRoutes.register: (context) => const RegisterView(),
       AppRoutes.login: (context) => const LoginView(),
+      AppRoutes.notes: (context) => const NotesView(),
     },
   ));
 }
@@ -30,11 +31,11 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Page'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Home Page'),
+      // ),
       body: FutureBuilder(
-        // Firebase.initializeApp returns  a Future(promise) - initializes Firebase before any widget is rendered.
+        // Firebase.initializeApp returns  a Future( omise) - initializes Firebase before any widget is rendered.
         future: Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         ),
@@ -46,20 +47,38 @@ class HomePage extends StatelessWidget {
               final user = FirebaseAuth.instance.currentUser;
               if (user != null) {
                 if (user.emailVerified) {
-                  print("Email verified");
+                  return const NotesView();
                 } else {
                   return const VerifyEmailView();
                 }
               } else {
                 return const LoginView();
               }
-              return const Text("Done");
 
             default:
               return const CircularProgressIndicator();
           }
         },
       ),
+    );
+  }
+}
+
+class NotesView extends StatefulWidget {
+  const NotesView({super.key});
+
+  @override
+  State<NotesView> createState() => _NotesViewState();
+}
+
+class _NotesViewState extends State<NotesView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Main UI"),
+      ),
+      body: const Text('Hello world'),
     );
   }
 }

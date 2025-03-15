@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/base/utils/app_routes.dart';
 import '../firebase_options.dart';
+import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -67,23 +69,29 @@ class _LoginViewState extends State<LoginView> {
                         try {
                           await FirebaseAuth.instance
                               .signInWithEmailAndPassword(
-                                  email: email, password: password);
-                          // print(userCredential);
+                            email: email,
+                            password: password,
+                          );
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                            AppRoutes.notes,
+                            (route) => false,
+                          );
+                          // log(userCredential);
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'invalid-credentials') {
-                            print('Invalid Credentials');
+                            devtools.log('Invalid Credentials');
                           }
-                          // print(e);
+                          // log(e);
                         } catch (e) {
-                          print("SOMETHING BAD HAPPENED!");
-                          print(e.runtimeType);
+                          devtools.log("SOMETHING BAD HAPPENED!");
+                          devtools.log(e.runtimeType.toString());
                         }
                       },
                       child: const Text('Login')),
                   TextButton(
                       onPressed: () {
                         Navigator.pushNamedAndRemoveUntil(
-                            context, "/register", (route) => false);
+                            context, AppRoutes.register, (route) => false);
                       },
                       child: const Text("Not registered yet? Register here!"))
                 ],

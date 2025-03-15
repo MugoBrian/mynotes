@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/base/utils/app_routes.dart';
+import 'dart:developer' as devtools show log;
 
 import '../firebase_options.dart';
 
@@ -70,17 +72,16 @@ class _RegisterViewState extends State<RegisterView> {
                         final password = _password.text;
 
                         try {
-                          final userCredential = await FirebaseAuth.instance
+                          await FirebaseAuth.instance
                               .createUserWithEmailAndPassword(
                                   email: email, password: password);
-                          print(userCredential);
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'weak-password') {
-                            print(e.message);
+                            devtools.log(e.message.toString());
                           } else if (e.code == 'email-already-in-use') {
-                            print(e.message);
+                            devtools.log(e.message.toString());
                           } else if (e.code == 'invalid-email') {
-                            print(e.message);
+                            devtools.log(e.message.toString());
                           }
                         }
                       },
@@ -88,9 +89,10 @@ class _RegisterViewState extends State<RegisterView> {
                   TextButton(
                       onPressed: () {
                         Navigator.pushNamedAndRemoveUntil(
-                            context, "/login", (route) => false);
+                            context, AppRoutes.login, (route) => false);
                       },
-                      child: const Text("Already have an account? Login here!"))
+                      child: const Text(
+                          "Already have an account? devtools.Login here!"))
                 ],
               );
 
