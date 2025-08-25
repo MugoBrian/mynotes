@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/base/utils/app_routes.dart';
+import 'package:mynotes/base/utils/show_error_dialog.dart';
 import '../firebase_options.dart';
 import 'dart:developer' as devtools show log;
 
@@ -81,15 +82,17 @@ class _LoginViewState extends State<LoginView> {
                           );
                           // log(userCredential);
                         } on FirebaseAuthException catch (e) {
-                          if (e.code == 'invalid-credentials') {
+                          devtools.log(e.code);
+                          if (e.code == 'invalid-credential') {
                             devtools.log('Invalid Credentials');
-                          } else if (e.code == 'user-not-found') {
-                            await showErrorDialog(context, "User not found!");
+                            await showErrorDialog(
+                                context, "Invalid Credentials!");
+                          } else {
+                            await showErrorDialog(context, "Error: ${e.code}");
                           }
                           // log(e);
                         } catch (e) {
-                          devtools.log("SOMETHING BAD HAPPENED!");
-                          devtools.log(e.runtimeType.toString());
+                          //
                         }
                       },
                       child: const Text('Login')),
@@ -110,21 +113,3 @@ class _LoginViewState extends State<LoginView> {
   }
 }
 
-Future<void> showErrorDialog(BuildContext context, String text) {
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('An error ocurred!'),
-          content: Text(text),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            )
-          ],
-        );
-      });
-}

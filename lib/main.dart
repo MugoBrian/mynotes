@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
       //   title: const Text('Home Page'),
       // ),
       body: FutureBuilder(
-        // Firebase.initializeApp returns  a Future( omise) - initializes Firebase before any widget is rendered.
+        // Firebase.initializeApp returns  a Future( promise) - initializes Firebase before any widget is rendered.
         future: Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         ),
@@ -105,7 +105,6 @@ class _NotesViewState extends State<NotesView> {
               ];
             },
           ),
-          const Text("Hello world")
         ],
       ),
       body: const Text('Hello world'),
