@@ -35,6 +35,9 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
+      ),
       body: FutureBuilder(
         // Firebase.initializeApp returns  a Future(promise) - initializes Firebase before any widget is rendered.
         future: Firebase.initializeApp(
@@ -80,6 +83,8 @@ class _LoginViewState extends State<LoginView> {
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'invalid-credentials') {
                             devtools.log('Invalid Credentials');
+                          } else if (e.code == 'user-not-found') {
+                            await showErrorDialog(context, "User not found!");
                           }
                           // log(e);
                         } catch (e) {
@@ -103,4 +108,23 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
   }
+}
+
+Future<void> showErrorDialog(BuildContext context, String text) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('An error ocurred!'),
+          content: Text(text),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            )
+          ],
+        );
+      });
 }

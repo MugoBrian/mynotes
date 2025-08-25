@@ -76,6 +76,7 @@ class _RegisterViewState extends State<RegisterView> {
                               .createUserWithEmailAndPassword(
                                   email: email, password: password);
                         } on FirebaseAuthException catch (e) {
+                          devtools.log(e.message.toString());
                           if (e.code == 'weak-password') {
                             devtools.log(e.message.toString());
                           } else if (e.code == 'email-already-in-use') {
@@ -91,8 +92,7 @@ class _RegisterViewState extends State<RegisterView> {
                         Navigator.pushNamedAndRemoveUntil(
                             context, AppRoutes.login, (route) => false);
                       },
-                      child: const Text(
-                          "Already have an account? devtools.Login here!"))
+                      child: const Text("Already have an account? Login here!"))
                 ],
               );
 
