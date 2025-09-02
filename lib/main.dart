@@ -21,6 +21,7 @@ void main() {
       AppRoutes.register: (context) => const RegisterView(),
       AppRoutes.login: (context) => const LoginView(),
       AppRoutes.notes: (context) => const NotesView(),
+      AppRoutes.verifyEmail: (context) => const VerifyEmailView(),
     },
   ));
 }

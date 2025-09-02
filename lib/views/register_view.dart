@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/base/utils/app_routes.dart';
+import 'package:mynotes/base/utils/show_error_dialog.dart';
 import 'dart:developer' as devtools show log;
 
 import '../firebase_options.dart';
@@ -75,14 +76,21 @@ class _RegisterViewState extends State<RegisterView> {
                           await FirebaseAuth.instance
                               .createUserWithEmailAndPassword(
                                   email: email, password: password);
+                          final user = FirebaseAuth.instance.currentUser;
+                          await user?.sendEmailVerification();
+
+                          Navigator.of(context)
+                              .pushNamed(AppRoutes.verifyEmail);
                         } on FirebaseAuthException catch (e) {
                           devtools.log(e.message.toString());
-                          if (e.code == 'weak-password') {
+                          if (e.code == 'email-already-in-use') {
                             devtools.log(e.message.toString());
-                          } else if (e.code == 'email-already-in-use') {
-                            devtools.log(e.message.toString());
+                            await showErrorDialog(context, "Weak Password");
                           } else if (e.code == 'invalid-email') {
                             devtools.log(e.message.toString());
+                            await showErrorDialog(context, "Weak Password");
+                          } else {
+                            await showErrorDialog(context, "Error: ${e.code}");
                           }
                         }
                       },
